@@ -19,6 +19,8 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input file not specified!' }
 
+if (params.db) { ch_db = file(params.db) }
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
@@ -77,11 +79,15 @@ workflow COLABFOLD {
     )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
+    log.info """
+    print ${params.db}
+    """
+
     //
     // WORKFLOW: Run colabfold
     //
     if(params.mode == "colabfold") {
-        RUN_COLABFOLD(INPUT_CHECK.out.reads, params.model_type, params.db, params.num_recycle)
+        RUN_COLABFOLD(INPUT_CHECK.out.reads, params.model_type, ch_db, params.num_recycle)
     }
 
     //
