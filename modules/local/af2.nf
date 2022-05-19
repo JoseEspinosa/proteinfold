@@ -1,6 +1,6 @@
 process RUN_AF2 {
     tag "${seq_name}"
-    label 'customConf'
+    label 'process_medium'
 
     //TODO
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
