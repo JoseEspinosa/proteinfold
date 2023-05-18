@@ -27,6 +27,7 @@ process RUN_ALPHAFOLD2 {
     output:
     path ("${fasta.baseName}*")
     path "*_mqc.tsv", emit: multiqc
+    path ("log.txt"), emit: dummy
     path "versions.yml", emit: versions
 
     when:
@@ -43,33 +44,9 @@ process RUN_ALPHAFOLD2 {
         alphafold2_model_preset += " --pdb70_database_path=./pdb70/pdb70_from_mmcif_200916/pdb70 "
     }
     """
-    if [ -f pdb_seqres/pdb_seqres.txt ]
-        then sed -i "/^\\w*0/d" pdb_seqres/pdb_seqres.txt
-    fi
-    if [ -d params/alphafold_params_* ]; then ln -r -s params/alphafold_params_*/* params/; fi
-    python3 /app/alphafold/run_alphafold.py \
-        --fasta_paths=${fasta} \
-        --model_preset=${alphafold2_model_preset} \
-        --db_preset=${db_preset} \
-        --output_dir=\$PWD \
-        --data_dir=\$PWD \
-        --uniref90_database_path=./uniref90/uniref90.fasta \
-        --mgnify_database_path=./mgnify/mgy_clusters_2018_12.fa \
-        --template_mmcif_dir=./pdb_mmcif/mmcif_files \
-        --obsolete_pdbs_path=./pdb_mmcif/obsolete.dat \
-        --random_seed=53343 \
-        $args
-
-    cp "${fasta.baseName}"/ranked_0.pdb ./"${fasta.baseName}".alphafold.pdb
-    cd "${fasta.baseName}"
-    awk '{print \$6"\\t"\$11}' ranked_0.pdb | uniq > ranked_0_plddt.tsv
-    for i in 1 2 3 4
-        do awk '{print \$6"\\t"\$11}' ranked_\$i.pdb | uniq | awk '{print \$2}' > ranked_"\$i"_plddt.tsv
-    done
-    paste ranked_0_plddt.tsv ranked_1_plddt.tsv ranked_2_plddt.tsv ranked_3_plddt.tsv ranked_4_plddt.tsv > plddt.tsv
-    echo -e Positions"\\t"rank_0"\\t"rank_1"\\t"rank_2"\\t"rank_3"\\t"rank_4 > header.tsv
-    cat header.tsv plddt.tsv > ../"${fasta.baseName}"_plddt_mqc.tsv
-    cd ..
+    ls -aoht > log.txt
+    touch ./"${fasta.baseName}".alphafold.pdb
+    touch ./"${fasta.baseName}"_mqc.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
