@@ -5,6 +5,13 @@ process RUN_ALPHAFOLD2 {
     tag "$meta.id"
     label 'process_medium'
 
+    beforeScript """
+    mkdir ./tmp
+    export TMPDIR=./tmp
+    """
+
+    // afterScript 'rm -rf $TMPDIR' uncomment after testing beforeScript works
+
     container "nf-core/proteinfold_alphafold2_standard:1.1.0"
 
     input:
