@@ -5,10 +5,10 @@ process RUN_ALPHAFOLD2 {
     tag "$meta.id"
     label 'process_medium'
 
-    beforeScript """
-    mkdir ./tmp
-    export TMPDIR=./tmp
-    """
+    // beforeScript """
+    // mkdir ./tmp
+    // export TMPDIR=./tmp
+    // """
 
     // afterScript 'rm -rf $TMPDIR' uncomment after testing beforeScript works
 
@@ -48,6 +48,9 @@ process RUN_ALPHAFOLD2 {
         alphafold2_model_preset += " --pdb70_database_path=./pdb70/pdb70_from_mmcif_200916/pdb70 "
     }
     """
+    mkdir ./tmp
+    export TMPDIR=./tmp
+
     if [ -f pdb_seqres/pdb_seqres.txt ]
         then sed -i "/^\\w*0/d" pdb_seqres/pdb_seqres.txt
     fi
