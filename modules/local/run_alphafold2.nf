@@ -6,7 +6,7 @@ process RUN_ALPHAFOLD2 {
     label 'process_medium'
 
     container "nf-core/proteinfold_alphafold2_standard:1.1.0"
-
+ 
     input:
     tuple val(meta), path(fasta)
     val   db_preset
@@ -41,6 +41,8 @@ process RUN_ALPHAFOLD2 {
         alphafold2_model_preset += " --pdb70_database_path=./pdb70/pdb70_from_mmcif_200916/pdb70 "
     }
     """
+    echo CUDA_VISIBLE_DEVICES - $CUDA_VISIBLE_DEVICES -------------NVIDIA_VISIBLE_DEVICES - $NVIDIA_VISIBLE_DEVICES > visible_devices.txt'
+    
     if [ -f pdb_seqres/pdb_seqres.txt ]
         then sed -i "/^\\w*0/d" pdb_seqres/pdb_seqres.txt
     fi
