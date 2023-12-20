@@ -22,7 +22,7 @@ process RUN_ESMFOLD {
     def VERSION = '1.0.3' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
 
     """
-    echo -e "CUDA_VISIBLE_DEVICES - $CUDA_VISIBLE_DEVICES -------------NVIDIA_VISIBLE_DEVICES - $NVIDIA_VISIBLE_DEVICES" > visible_devices.txt
+    echo -e "CUDA_VISIBLE_DEVICES - \$CUDA_VISIBLE_DEVICES -------------NVIDIA_VISIBLE_DEVICES - \$NVIDIA_VISIBLE_DEVICES" > visible_devices.txt
     esm-fold \
         -i ${fasta} \
         -o \$PWD \
