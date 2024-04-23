@@ -27,9 +27,6 @@ process MMSEQS_COLABFOLDSEARCH {
     def VERSION = '1.5.2' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
 
     """
-    ln -r -s $uniref30/uniref30_* ./db
-    ln -r -s $colabfold_db/colabfold_envdb* ./db
-
     /localcolabfold/colabfold-conda/bin/colabfold_search \\
         $args \\
         --threads $task.cpus ${fasta} \\
